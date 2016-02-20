@@ -1,0 +1,25 @@
+Prerequisites:
+
+System:
+1. Should have aws cli and credentials configured on you machine.
+2. Should have python 2.7
+3. Should have troposphere installed. pip install troposphere.
+
+AWS pre-requisites:
+1. Should have aws ssh key created in your account. Download and save private key so that you can use it later for logging into your ec2 instance.
+2. Should have Hosted zone created in AWS Route53. Say example.com. You need to have your own hostez zone. example.com is just an example it might not be actually available to use. Pass on your own hosted zone as parameter.
+3. You should have IAM permissions to create AWS resources which you have defined in the template.
+4. You should have website content as zip in aws s3 bucket. Pass on same bucket name as parameter. 
+
+Execution Steps:
+1. Create Template
+python demo.py > demo.template
+
+2. Validate template
+aws cloudformation validate-template --template-body file://./demo.template
+
+3. Create stack
+aws cloudformation create-stack --stack-name demo --parameters ParameterKey=KeyName,ParameterValue=devops ParameterKey=Bucket,ParameterValue=gslab-demo ParameterKey=VPCCIDR,ParameterValue=10.200.0 ParameterKey=EC2InstanceType,ParameterValue=t1.micro ParameterKey=HostedZone,ParameterValue=example.com --capabilities CAPABILITY_IAM --disable-rollback --template-body file://./demo.template
+
+4. Delete stack
+aws cloudformation delete-stack  --stack-name demo
